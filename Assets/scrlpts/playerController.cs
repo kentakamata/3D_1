@@ -8,6 +8,8 @@ public class playerController : MonoBehaviour
     [SerializeField] float gravityModifier;//重力値調整用
     [SerializeField] float jumpForce;//ジャンプ力
     [SerializeField] bool isOnGround;//地面についているか
+    [SerializeField] ParticleSystem explosionParicle;
+    [SerializeField] ParticleSystem dirtParticle;
     public bool gameOver;//何も書かなければprivateです
     Animator playerAnim;
     void Start()
@@ -15,9 +17,9 @@ public class playerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
         playerAnim = GetComponent<Animator>();
-    }
+        dirtParticle.Play();
+    }    // Update is called once per frame
 
-    // Update is called once per frame
     void Update()
     {
         //スペースキーが押されて、かつ、地面にいたら
@@ -41,9 +43,11 @@ public class playerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Obstacle"))
         {
+            explosionParicle.Play();
             gameOver = true;//ゲームオーバーにする
             playerAnim.SetBool("Death_b",true);
             playerAnim.SetInteger("DeathType_int",1);
+            dirtParticle.Stop();
         }
     }
 }
